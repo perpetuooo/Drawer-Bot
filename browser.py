@@ -1,8 +1,11 @@
 from selenium import webdriver
 from bs4 import BeautifulSoup
+from PIL import Image
+import io
 import time
 import random
 import psutil
+import requests
 
 driver = None
 
@@ -35,11 +38,28 @@ def detect_browser():
 
     return driver
 
-search = input("Pesquisar // Search: ")
-search = f"{search} clipart"
+def img_download(url, filename):
+    try:
+        download_path = r'C:\\Users\\pedro\\Desktop\\imgs\\'
+        img_content = requests.get(url).content
+        img_file = io.BytesIO(img_content)
+        pil = Image.open(img_file)
 
-detect_browser()
-driver.get('https:/www.google.com/search?tbm=isch&q='+ search)
+        if pil.mode == 'P':
+            pil = pil.convert('RGB')
+
+        file_path = download_path + filename
+
+        with open(file_path, 'wb') as f:
+            pil.save(f, 'JPEG')
+
+    except Exception as e:
+        print("ERROR: ", str(e))
+
+search = input("Pesquisar // Search: ")
+
+driver = detect_browser()
+driver.get(f'https:/www.google.com/search?tbm=isch&q= {search} clipart')
 time.sleep(0.5)
 
 try:
@@ -59,12 +79,13 @@ try:
         if img_src and img_src.startswith('http'):
             img_urls.append(img_src)
 
+    rnd_img = img_urls[random.randint(0, len(img_urls) - 1)]
     print(f"{len(img_urls)} imagens encontradas // images found.")
-    rnd_img = random.randint(0, len(img_urls) - 1)
-    print(f"URL: {img_urls[rnd_img]}")
+    print(f"URL: {rnd_img}")
 
 except Exception as e:
     print("ERROR: ", str(e))
 
 finally:
+    img_download(rnd_img, "imagem.jpg")
     driver.quit()
