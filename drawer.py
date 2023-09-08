@@ -1,10 +1,16 @@
+import settings as stg
+import importlib
 import pyautogui
 import cv2
-import time
+import os
 
-image_path = r'C:\Users\pedro\Desktop\peixe.jpg'
 
-def drawer():
+
+def draw():
+
+    importlib.reload(stg)
+    image_path = f"{os.path.join((os.path.expanduser('~')), 'Pictures')}\{stg.img_name}.jpg"
+
     canvasX = 825
     canvasY = 525
     resizeX = 150
@@ -26,6 +32,5 @@ def drawer():
                 pyautogui.moveTo(canvasX + x, canvasY + y)
                 pyautogui.click(button='left')
 
-print("iniciando em 3 segundos...")
-time.sleep(3)
-drawer()
+if __name__ == "__main__":
+    pass
