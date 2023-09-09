@@ -1,22 +1,16 @@
-import settings as stg
-import importlib
+from settings import stg
 import pyautogui
 import cv2
-import os
-
-
 
 def draw():
-
-    importlib.reload(stg)
-    image_path = f"{os.path.join((os.path.expanduser('~')), 'Pictures')}\{stg.img_name}.jpg"
+    path = str(stg.file_path)
 
     canvasX = 825
     canvasY = 525
     resizeX = 150
     resizeY = 150
 
-    img = cv2.imread(image_path)
+    img = cv2.imread(path)
     img = cv2.resize(img, (resizeX, resizeY), interpolation=cv2.INTER_LINEAR)
     height, width, _ = img.shape
 

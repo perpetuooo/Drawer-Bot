@@ -1,7 +1,12 @@
+from pathlib import Path
 import datetime
 
-global date
-global img_name
+class Config():
+    date = datetime.datetime.now().strftime("%d-%m-%y %H.%M.%S")
+    imgs_path = Path.home() / "Pictures"/ "src"
+    if not imgs_path.exists:
+        imgs_path.mkdir(parents=True)
 
-date = datetime.datetime.now().strftime("%d-%m-%y %H.%M.%S")
-img_name = None
+    file_path = None
+
+stg = Config()

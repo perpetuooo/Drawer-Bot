@@ -1,14 +1,13 @@
 from selenium import webdriver
 from bs4 import BeautifulSoup
+from settings import stg
 from PIL import Image
 import io
-import os
 import time
 import random
 import psutil
 import drawer
 import requests
-import settings as stg
 
 driver = None
 
@@ -43,7 +42,6 @@ def detect_browser():
 
 def img_download(url, filename):
     try:
-        download_path = os.path.join((os.path.expanduser('~')), "Pictures")
         img_content = requests.get(url).content
         img_file = io.BytesIO(img_content)
         pil = Image.open(img_file)
@@ -51,9 +49,9 @@ def img_download(url, filename):
         if pil.mode == 'P':
             pil = pil.convert('RGB')
 
-        file_path = download_path + filename
+        stg.file_path = stg.imgs_path / filename
 
-        with open(file_path, 'wb') as f:
+        with open(stg.file_path, 'wb') as f:
             pil.save(f, 'JPEG')
 
     except Exception as e:
@@ -67,7 +65,7 @@ time.sleep(0.5)
 
 try:
     img_urls = []
-    stg.img_name = f"{search} {stg.date}"
+    img_name = f"{search} {stg.date}"
 
     for i in range(2):
         driver.execute_script("window.scrollBy(0, 1000)")
@@ -91,6 +89,6 @@ except Exception as e:
     print("ERROR: ", str(e))
 
 finally:
-    img_download(rnd_img, f"{stg.img_name}.jpg")
     driver.quit()
+    img_download(rnd_img, f"{img_name}.jpg")
     drawer.draw()
