@@ -8,5 +8,7 @@ class Config():
         imgs_path.mkdir(parents=True)
 
     file_path = None
+    canvas_up = None
+    canvas_down = None
 
 stg = Config()

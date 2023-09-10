@@ -8,6 +8,8 @@ import random
 import psutil
 import drawer
 import requests
+import keyboard
+import pyautogui
 
 driver = None
 
@@ -57,8 +59,18 @@ def img_download(url, filename):
     except Exception as e:
         print("ERROR: ", str(e))
 
-search = input("Pesquisar // Search: ")
 
+print("Pressione SHIFT no canto superior esquerdo // Press SHIFT in the upper left corner.")
+keyboard.wait('shift')
+stg.canvas_up = pyautogui.position()
+time.sleep(1)
+print("Pressione SHIFT no canto inferior direito // Press SHIFT in the bottom right corner.")
+keyboard.wait('shift')
+stg.canvas_down = pyautogui.position()
+time.sleep(1)
+print("Posição do canvas configurada // Canvas position configured.")
+
+search = input("Pesquisar // Search: ")
 driver = detect_browser()
 driver.get(f'https:/www.google.com/search?tbm=isch&q= {search} clipart')
 time.sleep(0.5)
