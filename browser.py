@@ -12,10 +12,7 @@ import requests
 import keyboard
 import pyautogui
 
-driver = None
-
 def detect_browser():
-
     for process in psutil.process_iter(attrs=['pid', 'name']):
         try:
             if "chrome" in process.info['name'].lower():
@@ -43,6 +40,7 @@ def detect_browser():
 
     return driver
 
+
 def img_download(url, filename):
     try:
         img_content = requests.get(url).content
@@ -61,6 +59,44 @@ def img_download(url, filename):
         print("ERROR: ", str(e))
 
 
+def img_search():
+    search = input("Pesquisar // Search: ")
+    driver = detect_browser()
+    driver.get(f'https:/www.google.com/search?tbm=isch&q= {search} clipart')
+    time.sleep(0.5)
+
+    try:
+        img_urls = []
+        img_name = f"{search} {stg.date}"
+
+        for i in range(2):
+            driver.execute_script("window.scrollBy(0, 1000)")
+
+        time.sleep(1)
+        page_source = driver.page_source
+        soup = BeautifulSoup(page_source, 'html.parser')
+        img_elements = soup.find_all('img', class_='rg_i')
+
+        for img in img_elements:
+            img_src = img.get('src')
+            
+            if img_src and img_src.startswith('http'):
+                img_urls.append(img_src)
+
+        rnd_img = img_urls[random.randint(0, len(img_urls) - 1)]
+        print(colored(f'{len(img_urls)}', 'yellow'), "imagens encontradas // images found.")
+        print(f"URL: {rnd_img}")
+
+    except Exception as e:
+        print("ERROR: ", str(e))
+
+    finally:
+        driver.quit()
+        img_download(rnd_img, f"{img_name}.jpg")
+        print("Começando... // Starting...")
+        drawer.draw()
+
+
 print("Pressione SHIFT no canto superior esquerdo // Press SHIFT in the upper left corner.")
 keyboard.wait('shift')
 stg.canvas_up = pyautogui.position()
@@ -69,41 +105,6 @@ print("Pressione SHIFT no canto inferior direito // Press SHIFT in the bottom ri
 keyboard.wait('shift')
 stg.canvas_down = pyautogui.position()
 time.sleep(0.5)
-print("Posição do canvas configurada // Canvas position configured.")
-print("x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x\n")
-
-search = input("Pesquisar // Search: ")
-driver = detect_browser()
-driver.get(f'https:/www.google.com/search?tbm=isch&q= {search} clipart')
-time.sleep(0.5)
-
-try:
-    img_urls = []
-    img_name = f"{search} {stg.date}"
-
-    for i in range(2):
-        driver.execute_script("window.scrollBy(0, 1000)")
-
-    time.sleep(1)
-    page_source = driver.page_source
-    soup = BeautifulSoup(page_source, 'html.parser')
-    img_elements = soup.find_all('img', class_='rg_i')
-
-    for img in img_elements:
-        img_src = img.get('src')
-        
-        if img_src and img_src.startswith('http'):
-            img_urls.append(img_src)
-
-    rnd_img = img_urls[random.randint(0, len(img_urls) - 1)]
-    print(f"{len(img_urls)} imagens encontradas // images found.")
-    print(f"URL: {rnd_img}")
-
-except Exception as e:
-    print("ERROR: ", str(e))
-
-finally:
-    driver.quit()
-    img_download(rnd_img, f"{img_name}.jpg")
-    print("Começando... // Starting...")
-    drawer.draw()
+print("Posição do Canvas configurada // Canvas position configured.")
+cprint("=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=\n", attrs=["bold", "dark"])
+img_search()
