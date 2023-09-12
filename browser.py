@@ -1,4 +1,5 @@
 from selenium import webdriver
+from termcolor import cprint, colored
 from bs4 import BeautifulSoup
 from settings import stg
 from PIL import Image
@@ -63,12 +64,13 @@ def img_download(url, filename):
 print("Pressione SHIFT no canto superior esquerdo // Press SHIFT in the upper left corner.")
 keyboard.wait('shift')
 stg.canvas_up = pyautogui.position()
-time.sleep(1)
+time.sleep(0.5)
 print("Pressione SHIFT no canto inferior direito // Press SHIFT in the bottom right corner.")
 keyboard.wait('shift')
 stg.canvas_down = pyautogui.position()
-time.sleep(1)
+time.sleep(0.5)
 print("Posição do canvas configurada // Canvas position configured.")
+print("x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x\n")
 
 search = input("Pesquisar // Search: ")
 driver = detect_browser()
@@ -103,4 +105,5 @@ except Exception as e:
 finally:
     driver.quit()
     img_download(rnd_img, f"{img_name}.jpg")
+    print("Começando... // Starting...")
     drawer.draw()

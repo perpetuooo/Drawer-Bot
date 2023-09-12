@@ -1,5 +1,6 @@
 from settings import stg
 import pyautogui
+import keyboard
 import cv2
 import numpy as np
 
@@ -26,6 +27,9 @@ def draw():
                 abs_y = stg.canvas_up[1] + (stg.canvas_down[1] - stg.canvas_up[1]) / 2 - height / 2 + y
                 pyautogui.moveTo(abs_x, abs_y)
                 pyautogui.click(button='left')
+
+            if keyboard.is_pressed('esc'):
+                return
 
 if __name__ == "__main__":
     pass
