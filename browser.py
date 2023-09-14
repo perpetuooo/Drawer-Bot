@@ -1,9 +1,9 @@
-from selenium import webdriver
 from termcolor import cprint, colored
-from bs4 import BeautifulSoup
+from selenium import webdriver
 from settings import stg
 from PIL import Image
 import io
+import re
 import time
 import random
 import psutil
@@ -12,6 +12,7 @@ import requests
 import keyboard
 import pyautogui
 
+#detecting the users browser and adjusting its settings
 def detect_browser():
     for process in psutil.process_iter(attrs=['pid', 'name']):
         try:
@@ -35,8 +36,8 @@ def detect_browser():
                 driver = webdriver.Edge(options=options)
                 break
         
-        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
-            pass
+        except Exception as e:
+            cprint(f"ERROR: {str(e)}", "red")
 
     return driver
 
@@ -45,66 +46,85 @@ def img_download(url, filename):
     try:
         img_content = requests.get(url).content
         img_file = io.BytesIO(img_content)
+        stg.file_path = stg.imgs_path / filename
         pil = Image.open(img_file)
 
         if pil.mode == 'P':
             pil = pil.convert('RGB')
 
-        stg.file_path = stg.imgs_path / filename
-
         with open(stg.file_path, 'wb') as f:
-            pil.save(f, 'JPEG')
+            pil.save(f, 'JPEG', quality=95)
 
     except Exception as e:
-        print("ERROR: ", str(e))
+        cprint(f"ERROR: {str(e)}", "red")
 
 
-def img_search():
-    search = input("Pesquisar // Search: ")
-    driver = detect_browser()
-    driver.get(f'https:/www.google.com/search?tbm=isch&q= {search} clipart')
-    time.sleep(0.5)
-
+def img_search(keyword):
     try:
+        driver = detect_browser()
+        driver.get(f'https:/www.google.com/search?tbm=isch&q= {keyword} clipart')
+        time.sleep(0.5)
+
         img_urls = []
         img_name = f"{search} {stg.date}"
-
-        for i in range(2):
-            driver.execute_script("window.scrollBy(0, 1000)")
-
-        time.sleep(1)
+        max_retries = 5
         page_source = driver.page_source
-        soup = BeautifulSoup(page_source, 'html.parser')
-        img_elements = soup.find_all('img', class_='rg_i')
 
-        for img in img_elements:
-            img_src = img.get('src')
-            
-            if img_src and img_src.startswith('http'):
-                img_urls.append(img_src)
+        #loading more images by scrolling down the page
+        driver.execute_script("window.scrollBy(0, 1000)")
+        time.sleep(0.5)
 
-        rnd_img = img_urls[random.randint(0, len(img_urls) - 1)]
-        print(colored(f'{len(img_urls)}', 'yellow'), "imagens encontradas // images found.")
-        print(f"URL: {rnd_img}")
+        #finding all URLs that are images jpg, jpeg or png
+        regex = r'"(https://[^"]+\.(jpg|jpeg|png))",(\d+),(\d+)'
+        matches = re.findall(regex, page_source)
 
+        for url in matches:
+            url = url[0]
+            img_urls.append(url)
+        
+        if img_urls:
+            rnd_img = random.choice(img_urls)
+            print(colored(f'{len(img_urls)}', 'yellow'), "imagens encontradas // images found.")
+            print(f"URL: {rnd_img}")
+            img_download(rnd_img, f"{img_name}.jpg")
+
+        else:
+            print("Nenhuma imagem encontrada // No images found.")
+    
+    #retrying the download function in case of errors
     except Exception as e:
-        print("ERROR: ", str(e))
+        cprint(f"ERROR: {str(e)}", "red")
+        retry_count = 0
+        while retry_count <= max_retries:
+            try:
+                rnd_img = random.choice(img_urls)
+                print(f"URL: {rnd_img}")
+                img_download(rnd_img, f"{img_name}.jpg")
+                break
+
+            except Exception as e:
+                cprint(f"ERROR: {str(e)}", "red")
+                retry_count += 1
+
+        else:
+            print("Alguma coisa deu errado, reinicie o programa. // Something went wrong, restart the program.")
 
     finally:
         driver.quit()
         img_download(rnd_img, f"{img_name}.jpg")
-        print("Começando... // Starting...")
         drawer.draw()
 
 
 print("Pressione SHIFT no canto superior esquerdo // Press SHIFT in the upper left corner.")
 keyboard.wait('shift')
 stg.canvas_up = pyautogui.position()
-time.sleep(0.5)
+time.sleep(0.3)
 print("Pressione SHIFT no canto inferior direito // Press SHIFT in the bottom right corner.")
 keyboard.wait('shift')
 stg.canvas_down = pyautogui.position()
-time.sleep(0.5)
+time.sleep(0.3)
 print("Posição do Canvas configurada // Canvas position configured.")
-cprint("=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=\n", attrs=["bold", "dark"])
-img_search()
+cprint("\nx=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x\n", attrs=["bold", "dark"])
+
+search = input("Pesquisar // Search: ")
+img_search(search)
