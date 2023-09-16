@@ -47,7 +47,7 @@ def detect_browser():
 def img_download(img_list, file_name):
     try:
         rnd_img = random.choice(img_list)
-        print(f"Imagem escolhida de // Choosen image from --> {rnd_img}")
+        print(f"Imagem escolhida // Choosen image --> {rnd_img}")
 
         img_content = requests.get(rnd_img).content
         img_file = io.BytesIO(img_content)
@@ -70,7 +70,7 @@ def img_download(img_list, file_name):
         while retry_count <= max_retries:
             try:
                 rnd_img = random.choice(img_list)
-                print(f"URL --> {rnd_img}")
+                print(f"Imagem escolhida // Choosen image --> {rnd_img}")
                 img_download(img_list, file_name)
                 break
 
@@ -115,14 +115,13 @@ def img_search():
 
     finally:
         driver.quit()
-        drawer.draw()
-        
+        drawer.draw() 
         menu_state = False  
         
         #menu loop.
         while True:
             if not menu_state:
-                print(f"Para desenhar outro {keyword}, pressione {stg.shift_f1} // To draw another {keyword}, press {stg.shift_f1}")
+                print(f"Para desenhar outro(a) {keyword}, pressione {stg.shift_f1} // To draw another {keyword}, press {stg.shift_f1}")
                 print(f"Para pesquisar outra palavra, pressione {stg.shift_f2} // To search another word, press {stg.shift_f2}")
                 print(f"Para sair do programa, pressione {stg.shift_esc} // To exit the program, press {stg.shift_esc}")
                 menu_state = True
@@ -135,14 +134,12 @@ def img_search():
                 
             elif keyboard.is_pressed('shift + f2'):
                 img_search()
-                menu_state = False
 
             elif keyboard.is_pressed('shift + esc'):
                 exit()
 
 
-
-
+#canvas configuration.
 print(f"Pressione {stg.shift} no canto superior esquerdo // Press {stg.shift} in the upper left corner.")
 keyboard.wait('shift')
 stg.canvas_up = pyautogui.position()
@@ -152,6 +149,6 @@ keyboard.wait('shift')
 stg.canvas_down = pyautogui.position()
 time.sleep(0.3)
 print("Posição do Canvas configurada // Canvas position configured.")
-cprint("\nx=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x\n", attrs=["bold", "dark"])
+cprint("\nx=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-x-=x=-=x=-=x=-=x=-=x=-=x=-=x\n", attrs=["bold", "dark"])
 
 img_search()

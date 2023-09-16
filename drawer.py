@@ -15,14 +15,14 @@ def draw():
     pyautogui.PAUSE = 0.001
 
     #image manipulation.
-    img = cv2.resize(cv2.imread(str(stg.file_path)), (resizeX, resizeY), interpolation=cv2.INTER_LINEAR) #Altera o tamanho da imagem.
-    img_grey = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) #Transforma a imagem em cores para cinza.
-    img_blur = cv2.GaussianBlur(img_grey, (7, 7), 0) #Suaviza a imagem para reduzir seu ruído.
-    img_thresh = cv2.adaptiveThreshold(img_blur, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2) #Binarização da imagem para obter seu contono.
-    img_erosion = cv2.erode(img_thresh, kernel, iterations=1) #Aumenta a expessura da imagem e preenche lacunas entre os contornos.
-    img_done = 255 - img_erosion #Inverte as cores da imagem.
-    height, width, _ = img.shape
-
+    img = cv2.resize(cv2.imread(str(stg.file_path)), (resizeX, resizeY), interpolation=cv2.INTER_LINEAR) #<-- changes the image size.
+    img_grey = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) #<-- turns the color image to grayscale.
+    img_blur = cv2.GaussianBlur(img_grey, (7, 7), 0) #<-- smoothes the image to reduce its noise.
+    img_thresh = cv2.adaptiveThreshold(img_blur, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2) #<-- image binarization to obtain its contour.
+    img_erosion = cv2.erode(img_thresh, kernel, iterations=1) #<-- fills the gaps in the contour by increasing its thickness.
+    img_done = 255 - img_erosion #<-- inverts the image colors.
+    height, width, _ = img.shape#<-- get height and width from the image.   
+    
     #goes through every pixel checking if theres anything to draw. 
     for y in range(height):
         for x in range(width):
