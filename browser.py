@@ -12,6 +12,7 @@ import requests
 import keyboard
 import pyautogui
 
+
 #detecting the users browser and adjusting its settings
 def detect_browser():
     for process in psutil.process_iter(attrs=['pid', 'name']):
@@ -42,11 +43,15 @@ def detect_browser():
     return driver
 
 
-def img_download(url, filename):
+#chooses a random image and tries to download it.
+def img_download(img_list, file_name):
     try:
-        img_content = requests.get(url).content
+        rnd_img = random.choice(img_list)
+        print(f"Imagem escolhida de // Choosen image from --> {rnd_img}")
+
+        img_content = requests.get(rnd_img).content
         img_file = io.BytesIO(img_content)
-        stg.file_path = stg.imgs_path / filename
+        stg.file_path = stg.imgs_path / file_name
         pil = Image.open(img_file)
 
         if pil.mode == 'P':
@@ -54,52 +59,19 @@ def img_download(url, filename):
 
         with open(stg.file_path, 'wb') as f:
             pil.save(f, 'JPEG', quality=95)
+            cprint(f"{stg.file_path}", "blue")
 
+    #retrying the download function in case of errors.
     except Exception as e:
         cprint(f"ERROR: {str(e)}", "red")
-
-
-def img_search(keyword):
-    try:
-        driver = detect_browser()
-        driver.get(f'https:/www.google.com/search?tbm=isch&q= {keyword} clipart')
-        time.sleep(0.5)
-
-        img_urls = []
-        img_name = f"{search} {stg.date}"
         max_retries = 5
-        page_source = driver.page_source
-
-        #loading more images by scrolling down the page
-        driver.execute_script("window.scrollBy(0, 1000)")
-        time.sleep(0.5)
-
-        #finding all URLs that are images jpg, jpeg or png
-        regex = r'"(https://[^"]+\.(jpg|jpeg|png))",(\d+),(\d+)'
-        matches = re.findall(regex, page_source)
-
-        for url in matches:
-            url = url[0]
-            img_urls.append(url)
-        
-        if img_urls:
-            rnd_img = random.choice(img_urls)
-            print(colored(f'{len(img_urls)}', 'yellow'), "imagens encontradas // images found.")
-            print(f"URL: {rnd_img}")
-            img_download(rnd_img, f"{img_name}.jpg")
-
-        else:
-            print("Nenhuma imagem encontrada // No images found.")
-    
-    #retrying the download function in case of errors
-    except Exception as e:
-        cprint(f"ERROR: {str(e)}", "red")
         retry_count = 0
+
         while retry_count <= max_retries:
             try:
-                rnd_img = random.choice(img_urls)
-                print(f"URL: {rnd_img}")
-                img_download(rnd_img, f"{img_name}.jpg")
+                rnd_img = random.choice(img_list)
+                print(f"URL --> {rnd_img}")
+                img_download(img_list, file_name)
                 break
 
             except Exception as e:
@@ -107,24 +79,79 @@ def img_search(keyword):
                 retry_count += 1
 
         else:
-            print("Alguma coisa deu errado, reinicie o programa. // Something went wrong, restart the program.")
+            cprint("Alguma coisa deu errado, reinicie o programa // Something went wrong, restart the program.", "red")
+
+
+#image scrapping through Google Images.
+def img_search():
+    try:
+        keyword = input("Pesquisar // Search: ")
+        driver = detect_browser()
+        driver.get(f'https:/www.google.com/search?tbm=isch&q= {keyword} clipart')
+        time.sleep(0.5)
+
+        img_urls = []
+        img_name = f"{keyword} {stg.date}"
+        page_source = driver.page_source
+
+        #finding all URLs that are images and putting them in the list.
+        regex = r'"(https://[^"]+\.(jpg|jpeg))",(\d+),(\d+)'
+        matches = re.findall(regex, page_source)
+
+        for url in matches:
+            url = url[0]
+            img_urls.append(url)
+        
+        if img_urls:
+            print(colored(f'{len(img_urls)}', 'yellow'), "imagens encontradas // images found.")
+            img_download(img_urls, f"{img_name}.jpg")
+
+        else:
+            cprint("Nenhuma imagem encontrada, tente novamente // No images found, try again.\n", "red")
+            img_search()
+    
+    except Exception as e:
+        cprint(f"ERROR: {str(e)}", "red")
 
     finally:
         driver.quit()
-        img_download(rnd_img, f"{img_name}.jpg")
         drawer.draw()
+        
+        menu_state = False  
+        
+        #menu loop.
+        while True:
+            if not menu_state:
+                print(f"Para desenhar outro {keyword}, pressione {stg.shift_f1} // To draw another {keyword}, press {stg.shift_f1}")
+                print(f"Para pesquisar outra palavra, pressione {stg.shift_f2} // To search another word, press {stg.shift_f2}")
+                print(f"Para sair do programa, pressione {stg.shift_esc} // To exit the program, press {stg.shift_esc}")
+                menu_state = True
+
+            if keyboard.is_pressed('shift + f1'):
+                img_name = f"{keyword} {stg.date}"
+                img_download(img_urls, f"{img_name}.jpg")
+                drawer.draw()
+                menu_state = False
+                
+            elif keyboard.is_pressed('shift + f2'):
+                img_search()
+                menu_state = False
+
+            elif keyboard.is_pressed('shift + esc'):
+                exit()
 
 
-print("Pressione SHIFT no canto superior esquerdo // Press SHIFT in the upper left corner.")
+
+
+print(f"Pressione {stg.shift} no canto superior esquerdo // Press {stg.shift} in the upper left corner.")
 keyboard.wait('shift')
 stg.canvas_up = pyautogui.position()
 time.sleep(0.3)
-print("Pressione SHIFT no canto inferior direito // Press SHIFT in the bottom right corner.")
+print(f"Pressione {stg.shift} no canto inferior direito // Press {stg.shift} in the bottom right corner.")
 keyboard.wait('shift')
 stg.canvas_down = pyautogui.position()
 time.sleep(0.3)
 print("Posição do Canvas configurada // Canvas position configured.")
 cprint("\nx=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x\n", attrs=["bold", "dark"])
 
-search = input("Pesquisar // Search: ")
-img_search(search)
+img_search()
