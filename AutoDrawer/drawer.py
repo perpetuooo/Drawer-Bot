@@ -1,4 +1,3 @@
-from termcolor import cprint, colored
 from settings import stg
 import pyautogui
 import keyboard
@@ -6,7 +5,7 @@ import cv2
 import numpy as np
 
 def draw():
-    print(f"\nComeçando... // Starting...\n(Pressione {stg.esc} para interromper o desenho // Press {stg.esc} to stop the drawer)")
+    print(f"\nComeçando... // Starting...\n(Pressione ESC para interromper o desenho // Press ESC to stop the drawer)")
 
     #values for testing only.
     resizeX = 500
@@ -34,7 +33,7 @@ def draw():
                 pyautogui.click(button='left')
 
             if keyboard.is_pressed('esc'):
-                cprint("Desenho interrompido... // Drawing interrupted...", "red")
+                print("(!) Desenho interrompido... // Drawing interrupted...")
                 return
     
     print("Desenho finalizado! // Drawing completed!")

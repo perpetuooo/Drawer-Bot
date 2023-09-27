@@ -1,4 +1,3 @@
-from termcolor import cprint, colored
 from selenium import webdriver
 from settings import stg
 from PIL import Image
@@ -38,7 +37,7 @@ def detect_browser():
                 break
         
         except Exception as e:
-            cprint(f"ERROR: {str(e)}", "red")
+            print(f"(-) ERROR: {str(e)}")
 
     return driver
 
@@ -59,11 +58,11 @@ def img_download(img_list, file_name):
 
         with open(stg.file_path, 'wb') as f:
             pil.save(f, 'JPEG', quality=95)
-            cprint(f"{stg.file_path}", "blue")
+            print(stg.file_path)
 
     #retrying the download function in case of errors.
     except Exception as e:
-        cprint(f"ERROR: {str(e)}", "red")
+        print(f"(-) ERROR: {str(e)}")
         max_retries = 5
         retry_count = 0
 
@@ -75,11 +74,11 @@ def img_download(img_list, file_name):
                 break
 
             except Exception as e:
-                cprint(f"ERROR: {str(e)}", "red")
+                print(f"(-) ERROR: {str(e)}")
                 retry_count += 1
 
         else:
-            cprint("Alguma coisa deu errado, reinicie o programa // Something went wrong, restart the program.", "red")
+            print("(!) Alguma coisa deu errado, reinicie o programa // Something went wrong, restart the program.")
 
 
 #image scrapping through Google Images.
@@ -103,15 +102,15 @@ def img_search():
             img_urls.append(url)
         
         if img_urls:
-            print(colored(f'{len(img_urls)}', 'yellow'), "imagens encontradas // images found.")
+            print(f"{len(img_urls)} imagens encontradas // images found.")
             img_download(img_urls, f"{img_name}.jpg")
 
         else:
-            cprint("Nenhuma imagem encontrada, tente novamente // No images found, try again.\n", "red")
+            print("(!) Nenhuma imagem encontrada, tente novamente // No images found, try again.\n")
             img_search()
     
     except Exception as e:
-        cprint(f"ERROR: {str(e)}", "red")
+        print(f"(-) ERROR: {str(e)}")
 
     finally:
         driver.quit()
@@ -121,9 +120,9 @@ def img_search():
         #menu loop.
         while True:
             if not menu_state:
-                print(f"Para desenhar outro(a) {keyword}, pressione {stg.shift_f1} // To draw another {keyword}, press {stg.shift_f1}")
-                print(f"Para pesquisar outra palavra, pressione {stg.shift_f2} // To search another word, press {stg.shift_f2}")
-                print(f"Para sair do programa, pressione {stg.shift_esc} // To exit the program, press {stg.shift_esc}")
+                print(f"Para desenhar outro(a) {keyword}, pressione SHIFT + F1 // To draw another {keyword}, press SHIFT + F1")
+                print(f"Para pesquisar outra palavra, pressione SHIFT + F2 // To search another word, press SHIFT + F2")
+                print(f"Para sair do programa, pressione SHIFT + ESC // To exit the program, press SHIFT + ESC")
                 menu_state = True
 
             if keyboard.is_pressed('shift + f1'):
@@ -140,15 +139,16 @@ def img_search():
 
 
 #canvas configuration.
-print(f"Pressione {stg.shift} no canto superior esquerdo // Press {stg.shift} in the upper left corner.")
+print(f"Pressione SHIFT no canto superior esquerdo // Press SHIFT in the upper left corner.")
 keyboard.wait('shift')
 stg.canvas_up = pyautogui.position()
 time.sleep(0.3)
-print(f"Pressione {stg.shift} no canto inferior direito // Press {stg.shift} in the bottom right corner.")
+print(f"Pressione SHIFT no canto inferior direito // Press SHIFT in the bottom right corner.")
 keyboard.wait('shift')
 stg.canvas_down = pyautogui.position()
 time.sleep(0.3)
 print("Posição do Canvas configurada // Canvas position configured.")
-cprint("\nx=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-x-=x=-=x=-=x=-=x=-=x=-=x=-=x\n", attrs=["bold", "dark"])
+print("\nx=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x\n")
 
 img_search()
+    
