@@ -1,9 +1,10 @@
 from selenium import webdriver
 from settings import stg
-from pathlib import Path
 from PIL import Image
 import io
 import re
+import os
+import art
 import time
 import random
 import psutil
@@ -48,18 +49,16 @@ def detect_browser():
 
 #chooses a random image and tries to download it.
 def img_download(img_list, file_name): 
-    imgs_path = Path.home() / "Pictures" / "src"
-
-    if not imgs_path.exists:
-        imgs_path.mkdir(parents=True)
-
     try:
+        if not os.path.exists(stg.imgs_path):
+            os.makedirs(stg.imgs_path)
+
         rnd_img = random.choice(img_list)
         print(f"Imagem escolhida // Choosen image --> {rnd_img}")
 
         img_content = requests.get(rnd_img).content
         img_file = io.BytesIO(img_content)
-        stg.file_path = imgs_path / file_name
+        stg.file_path = stg.imgs_path / file_name
         pil = Image.open(img_file)
 
         if pil.mode == 'P':
@@ -71,6 +70,7 @@ def img_download(img_list, file_name):
 
     #retrying the download function in case of errors.
     except Exception as e:
+        print('\n')
         print(f"(-) ERROR: {str(e)}")
         max_retries = 5
         retry_count = 0
@@ -83,6 +83,7 @@ def img_download(img_list, file_name):
                 break
 
             except Exception as e:
+                print('\n')
                 print(f"(-) ERROR: {str(e)}")
                 retry_count += 1
 
@@ -138,17 +139,22 @@ def img_search():
                 menu_state = True
 
             if keyboard.is_pressed('shift + f1'):
+                print('\n')
                 img_name = f"{keyword} {stg.date}"
                 img_download(img_urls, f"{img_name}.jpg")
                 drawer.draw()
                 menu_state = False
                 
             elif keyboard.is_pressed('shift + f2'):
+                print('\n')
                 img_search()
 
             elif keyboard.is_pressed('shift + esc'):
                 exit(0)
 
+
+art.tprint("Auto Drawer")
+print("https://github.com/perpetuooo\n")
 
 #canvas configuration.
 print(f"Pressione SHIFT no canto superior esquerdo // Press SHIFT in the upper left corner")
@@ -160,7 +166,7 @@ keyboard.wait('shift')
 stg.canvas_down = pyautogui.position()
 time.sleep(0.3)
 print("Posição do Canvas configurada // Canvas position configured")
-print("\nx=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x\n")
+print("\nx=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x=-=x\n")
 
 img_search()
     
