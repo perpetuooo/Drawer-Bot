@@ -3,6 +3,7 @@
 > Bot feito em Python que, ao receber uma palavra-chave, baixa uma imagem equivalente e a desenha simulando o cursor do usuário. 
 
 ## Pré-requisitos
+Algumas bibliotecas são necessárias caso queira rodar o código fonte ao invés de baixar a versão compilada:
 ```
 pip install selenium pillow psutil keyboard pyautogui opencv-python numpy pathlib art
 ```

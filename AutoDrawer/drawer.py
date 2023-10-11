@@ -6,8 +6,6 @@ import numpy as np
 
 def draw():
     try:
-        print(f"\nComeçando... // Starting...\n(Pressione ESC para interromper o desenho // Press ESC to stop the drawer)")
-
         #values for testing only.
         resizeX = 500
         resizeY = 500
@@ -27,24 +25,21 @@ def draw():
         for y in range(height):
             for x in range(width):
                 if img_done[y, x] != 0:
-                    abs_x = stg.canvas_up[0] + (stg.canvas_down[0] - stg.canvas_up[0]) / 2 - width / 2 + x
-                    abs_y = stg.canvas_up[1] + (stg.canvas_down[1] - stg.canvas_up[1]) / 2 - height / 2 + y
+                    abs_x = stg.canvasY[0] + (stg.canvasX[0] - stg.canvasY[0]) / 2 - width / 2 + x
+                    abs_y = stg.canvasY[1] + (stg.canvasX[1] - stg.canvasY[1]) / 2 - height / 2 + y
 
                     pyautogui.moveTo(abs_x, abs_y)
                     pyautogui.click(button='left')
 
                 if keyboard.is_pressed('esc'):
-                    print("(!) Desenho interrompido... // Drawing interrupted...")
-                    return
+                    return ("( ! ) Drawing interrupted.")
+        
+        return ("Drawing completed!")
                 
     except Exception as e:
-            print(f"(-) ERROR: {str(e)}")
-            print("Pressione CTRL+C para sair do programa // Press CTRL+C to exit the program")
-            keyboard.wait('ctrl+c')
-            exit(1)
+            return (f"( - ) ERROR: {str(e)}")
 
-    finally:
-        print("Desenho finalizado! // Drawing completed!")
+
 
 if __name__ == "__main__":
     pass

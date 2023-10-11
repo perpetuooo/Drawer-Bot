@@ -56,7 +56,6 @@ def img_download(img, file_name):
         if not os.path.exists(stg.imgs_path):
             os.makedirs(stg.imgs_path)
 
-
         img_content = requests.get(img).content
         img_file = io.BytesIO(img_content)
         stg.file_path = stg.imgs_path / file_name
@@ -68,7 +67,6 @@ def img_download(img, file_name):
         with open(stg.file_path, 'wb') as f:
             pil.save(f, 'JPEG', quality=95)
             print(stg.file_path)
-
 
     #retrying the download function in case of errors.
     except Exception as e:
@@ -84,14 +82,11 @@ def img_download(img, file_name):
                 retry_count += 1
 
         else:
-            return("(!) Something went wrong, try again.")
+            return("( ! ) Something went wrong, try again.")
+
 
 #image scrapping through Google Images.
 def img_search(keyword):
-    
-    if stg.canvasX and stg.canvasY == None:
-        return("(!) Canvas not selected.")
-    
     try:
         driver = detect_browser()
         driver.get(f'https:/www.google.com/search?tbm=isch&q= {keyword} clipart')
@@ -111,13 +106,14 @@ def img_search(keyword):
         
         if img_urls:
             rnd_img = random.choice(img_urls)
+            print("img downloading")   
             img_download(rnd_img, f"{img_name}.jpg")
 
         else:
-            return ("(!) No images found, try again\n")
+            return ("( ! ) No images found, try again\n")
     
     except Exception as e:
-        return (f"(-) ERROR: {str(e)}")
+        return (f"( - ) ERROR: {str(e)}")
 
     finally:
         driver.quit()
