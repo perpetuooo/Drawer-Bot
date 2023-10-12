@@ -13,13 +13,13 @@ Baixe os [arquivos binários](https://github.com/perpetuooo/Drawer-Bot/releases)
 git clone https://github.com/perpetuooo/Drawer-Bot.git
 ```
 ## Como usar
-1. Abra o executável ou rode o arquivo *browser.py*;
+1. Abra o executável ou rode o arquivo *main.py*;
 2. Selecione o espaço em que o desenho será feito (após selecionar, **NÃO MUDE** a janela de lugar);
 3. Pesquise uma palavra para sua imagem ser pesquisada, baixada e desenhada;
 
 ## To-do
 >⚠ Esse programa foi feito com o intuito de ser apenas um pequeno projeto pessoal, é possível que eu não implemente outros updates.
- - [ ] Criar uma interface gráfica para o programa;
+ - [x] Criar uma interface gráfica para o programa;
  - [ ] Melhorar a função do desenhador (muito lento);
  - [ ] Possibilitar desenhos com cores;
  
