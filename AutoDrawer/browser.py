@@ -4,14 +4,10 @@ from PIL import Image
 import io
 import re
 import os
-import art
 import time
 import random
 import psutil
-import drawer
 import requests
-import keyboard
-import pyautogui
 
 
 #detecting the users browser and adjusting its settings
@@ -66,7 +62,6 @@ def img_download(img, file_name):
 
         with open(stg.file_path, 'wb') as f:
             pil.save(f, 'JPEG', quality=95)
-            print(stg.file_path)
 
     #retrying the download function in case of errors.
     except Exception as e:
@@ -105,8 +100,7 @@ def img_search(keyword):
             img_urls.append(url)
         
         if img_urls:
-            rnd_img = random.choice(img_urls)
-            print("img downloading")   
+            rnd_img = random.choice(img_urls) 
             img_download(rnd_img, f"{img_name}.jpg")
 
         else:
