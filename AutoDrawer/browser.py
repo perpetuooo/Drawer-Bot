@@ -83,6 +83,7 @@ def img_download(img, file_name):
 #image scrapping through Google Images.
 def img_search(keyword):
     try:
+        stg.file_path = None
         driver = detect_browser()
         driver.get(f'https:/www.google.com/search?tbm=isch&q= {keyword} clipart')
         time.sleep(0.5)
