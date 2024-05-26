@@ -21,25 +21,25 @@ def img_search(keyword, path):
                 match process.info['name'].lower():
                     case "chrome.exe":
                         options = webdriver.ChromeOptions()
-                        #options.add_argument("headless")
+                        options.add_argument("headless")
                         options.add_argument("--log-level=3")
                         return webdriver.Chrome(options=options)
 
                     case "firefox.exe":
                         options = webdriver.FirefoxOptions()
-                        #options.add_argument('-headless')
+                        options.add_argument('-headless')
                         options.add_argument("--log-level=error")
                         return webdriver.Firefox(options=options)
 
                     case "msedge.exe":
                         options = webdriver.FirefoxOptions()
-                        #options.add_argument('-headless')
+                        options.add_argument('-headless')
                         options.add_argument("--log-level=error")
                         return webdriver.Firefox(options=options)
 
                     case "safari.exe":
                         options = webdriver.SafariOptions()
-                        #options.add_argument("headless")
+                        options.add_argument("headless")
                         options.add_argument("--log-level=3")
                         return webdriver.Safari(options=options)
                     
@@ -53,7 +53,6 @@ def img_search(keyword, path):
     #downloading the image.
     def downloader(img, file_path):
             try:
-                print("downloader")
                 if not os.path.exists(path):
                     os.makedirs(path)
 
@@ -65,21 +64,21 @@ def img_search(keyword, path):
 
             #retrying the download function in case of errors.
             except Exception as e:
-                print(f"error: {str(e)}")
+                print(f"download error: {str(e)}")
 
-                max_retries = 5
+                max_retries = 3
                 retry_count = 0
 
-                """while retry_count <= max_retries:
+                while retry_count <= max_retries:
                     try:
-                        downloader(img, file_name)
+                        downloader(img, file_path)
                         break
 
                     except Exception:
                         retry_count += 1
 
                 else:
-                    print("something went wrong...")"""
+                    print("couldnt download...")
 
 
     # last_keyword = None
@@ -100,12 +99,11 @@ def img_search(keyword, path):
         results.append(url[0])
 
     if results:
-        print("results")
         chosen_img = random.choice(results)
         date = datetime.now().strftime("%d-%m-%y %H.%M.%S")
         img_name = f"{keyword} {date}.jpg"
         file_path = os.path.join(path, img_name)
-        
+
         downloader(chosen_img, file_path)
     
     else:
