@@ -29,27 +29,27 @@ def draw(path):
     try:
         keyboard.wait('enter')
         
-        img = cv2.resize(cv2.imread(str(path)), (500, 500), interpolation=cv2.INTER_LINEAR)
+        img = cv2.resize(cv2.imread(str(path)), (400, 400), interpolation=cv2.INTER_LINEAR)
         kernel = np.ones((3, 3), np.uint8)
         pyautogui.PAUSE = 0.01
 
         height, width, _ = img.shape   
-        xI, yI = pyautogui.position()
+        initial_x, initial_y = pyautogui.position()
         contour = img_manipulation(img)
 
-        #going through every pixel checking if there's anything to draw
+        #going through every pixel checking if there's anything to draw.
         for y in range(height):
             x = 0
 
             while x < width:
                 if contour[y, x] != 0:
                     start_x = x
-                    pyautogui.moveTo(x + xI, y + yI)
+                    pyautogui.moveTo(x + initial_x, y + initial_y)
 
                     end_x = check_ending(y, start_x)
 
                     if end_x:
-                        pyautogui.dragTo(end_x + xI, y + yI, button="left")
+                        pyautogui.dragTo(end_x + initial_x, y + initial_y, button="left")
                         x = end_x
                     
                     else: break
@@ -65,14 +65,14 @@ def draw(path):
 
 
 if __name__ == "__main__":
-    draw("penguim.jpg")
+    draw("C:/Users/pedro/Desktop/penguim.jpg")
 
 '''     #goes through every pixel checking if theres anything to draw. 
         for y in range(height):
             for x in range(width):
                 if contour[y, x] != 0:
-                    pyautogui.click(x + xI, y + yI)
+                    pyautogui.click(x + initial_x, y + initial_y)
             
             if keyboard.is_pressed('esc'):
-                sys.exit()
+                sys.einitial_xt()
 '''
