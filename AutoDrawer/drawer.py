@@ -1,45 +1,78 @@
-from settings import stg
+import numpy as np
 import pyautogui
 import keyboard
 import cv2
-import numpy as np
+import sys
 
-def draw():
-    try:
-        #values for testing only.
-        resizeX = 500
-        resizeY = 500
-        kernel = np.ones((3, 3), np.uint8)
-        pyautogui.PAUSE = 0.001
+def draw(path):
 
-        #image manipulation.
-        img = cv2.resize(cv2.imread(str(stg.file_path)), (resizeX, resizeY), interpolation=cv2.INTER_LINEAR) #<-- changes the image size.
+    #image manipulation to get the drawing contour.
+    def img_manipulation(img):
         img_grey = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) #<-- turns the color image to grayscale.
         img_blur = cv2.GaussianBlur(img_grey, (7, 7), 0) #<-- smoothes the image to reduce its noise.
         img_thresh = cv2.adaptiveThreshold(img_blur, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2) #<-- image binarization to obtain its contour.
         img_erosion = cv2.erode(img_thresh, kernel, iterations=1) #<-- fills the gaps in the contour by increasing its thickness.
         img_done = 255 - img_erosion #<-- inverts the image colors.
-        height, width, _ = img.shape#<-- get height and width from the image.   
+
+        return img_done
+
+
+    #finding the end of the drawing.
+    def check_ending(row, start_x):
+        for x in range(start_x, width):
+             if contour[row, x] == 0:
+                return x
+            
+        return None
+    
+         
+    try:
+        keyboard.wait('enter')
         
-        #goes through every pixel checking if theres anything to draw. 
+        img = cv2.resize(cv2.imread(str(path)), (500, 500), interpolation=cv2.INTER_LINEAR)
+        kernel = np.ones((3, 3), np.uint8)
+        pyautogui.PAUSE = 0.01
+
+        height, width, _ = img.shape   
+        xI, yI = pyautogui.position()
+        contour = img_manipulation(img)
+
+        #going through every pixel checking if there's anything to draw
         for y in range(height):
-            for x in range(width):
-                if img_done[y, x] != 0:
-                    abs_x = stg.canvasY[0] + (stg.canvasX[0] - stg.canvasY[0]) / 2 - width / 2 + x
-                    abs_y = stg.canvasY[1] + (stg.canvasX[1] - stg.canvasY[1]) / 2 - height / 2 + y
+            x = 0
 
-                    pyautogui.moveTo(abs_x, abs_y)
-                    pyautogui.click(button='left')
+            while x < width:
+                if contour[y, x] != 0:
+                    start_x = x
+                    pyautogui.moveTo(x + xI, y + yI)
 
-                if keyboard.is_pressed('esc'):
-                    return ("( ! ) Drawing interrupted.")
-        
-        return ("Drawing completed!")
+                    end_x = check_ending(y, start_x)
+
+                    if end_x:
+                        pyautogui.dragTo(end_x + xI, y + yI, button="left")
+                        x = end_x
+                    
+                    else: break
                 
+                x += 1
+
+            if keyboard.is_pressed('esc'):
+                sys.exit()
+
     except Exception as e:
-            return (f"( - ) ERROR: {str(e)}")
+            print(f"error: {str(e)}")
 
 
 
 if __name__ == "__main__":
-    pass
+    draw("penguim.jpg")
+
+'''     #goes through every pixel checking if theres anything to draw. 
+        for y in range(height):
+            for x in range(width):
+                if contour[y, x] != 0:
+                    pyautogui.click(x + xI, y + yI)
+            
+            if keyboard.is_pressed('esc'):
+                sys.exit()
+'''
