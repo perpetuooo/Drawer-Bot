@@ -3,6 +3,8 @@ from pathlib import Path
 from datetime import datetime
 from selenium import webdriver
 
+from painter import draw
+
 import requests
 import psutil
 import random
@@ -61,8 +63,10 @@ def img_search(keyword, path):
                 img_done = Image.open(img_file).convert('RGB')
                 img_done.save(file_path, "JPEG", quality=80)
                 print("DONE!")
+                
+                draw(file_path)
 
-            #retrying the download function in case of errors.
+            #retrying the downloader in case of errors.
             except Exception as e:
                 print(f"download error: {str(e)}")
 
@@ -78,17 +82,19 @@ def img_search(keyword, path):
                         retry_count += 1
 
                 else:
-                    print("couldnt download...")
+                    print("couldn't download it...")
 
 
-    # last_keyword = None
+    #last_keyword = None
     driver = detect_browser()
+
     if not driver:
         print("driver not compatible...")
         return
 
-    driver.get(f'https:/www.google.com/search?tbm=isch&q={keyword} clipart')
+    driver.get(f'https:/www.google.com/search?tbm=isch&q={keyword} clipart filetype:jpg OR filetype:jpeg OR filetype:png')
 
+    #finding all URLs that are images.
     results = []
     source = driver.page_source
     regex = r'"(https://[^"]+\.(jpg|jpeg|png))",(\d+),(\d+)'
@@ -108,7 +114,6 @@ def img_search(keyword, path):
     
     else:
         print("no imgs found...")
-
 
 
 
