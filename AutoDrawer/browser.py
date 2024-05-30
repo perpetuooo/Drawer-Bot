@@ -64,6 +64,7 @@ def img_search(keyword, path):
                 img_done.save(file_path, "JPEG", quality=80)
                 print("DONE!")
                 
+                #return file_path
                 draw(file_path)
 
             #retrying the downloader in case of errors.
@@ -85,14 +86,14 @@ def img_search(keyword, path):
                     print("couldn't download it...")
 
 
-    #last_keyword = None
+    time = datetime.now()
     driver = detect_browser()
 
     if not driver:
         print("driver not compatible...")
         return
-
-    driver.get(f'https:/www.google.com/search?tbm=isch&q={keyword} clipart filetype:jpg OR filetype:jpeg OR filetype:png')
+    
+    driver.get(f'https:/www.google.com/search?tbm=isch&q={keyword} clipart filetype:jpg OR filetype:jpeg')
 
     #finding all URLs that are images.
     results = []
@@ -105,15 +106,20 @@ def img_search(keyword, path):
         results.append(url[0])
 
     if results:
+        print(f"found {len(results)} images in {int((datetime.now() - time).total_seconds())} seconds!")
+
         chosen_img = random.choice(results)
         date = datetime.now().strftime("%d-%m-%y %H.%M.%S")
         img_name = f"{keyword} {date}.jpg"
         file_path = os.path.join(path, img_name)
-
+        
+        driver.close()
+        print(f"downloading image: {chosen_img}")
         downloader(chosen_img, file_path)
     
     else:
-        print("no imgs found...")
+        print(f"no {keyword} images found...")
+        driver.close()
 
 
 
