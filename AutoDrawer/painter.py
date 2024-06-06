@@ -4,6 +4,7 @@ import keyboard
 import cv2
 import sys
 
+
 def draw(path):
 
     #image manipulation to get the drawing contour.
@@ -27,11 +28,12 @@ def draw(path):
     
          
     try:
-        keyboard.wait('enter')
-        
         img = cv2.resize(cv2.imread(str(path)), (400, 400), interpolation=cv2.INTER_LINEAR)
         kernel = np.ones((3, 3), np.uint8)
         pyautogui.PAUSE = 0.01
+
+        print(f"\npress 'enter' to start drawing...")
+        keyboard.wait('enter')
 
         height, width, _ = img.shape   
         initial_x, initial_y = pyautogui.position()
@@ -66,13 +68,4 @@ def draw(path):
 
 if __name__ == "__main__":
     draw("C:/Users/pedro/Desktop/penguim.jpg")
-
-'''     #goes through every pixel checking if theres anything to draw. 
-        for y in range(height):
-            for x in range(width):
-                if contour[y, x] != 0:
-                    pyautogui.click(x + initial_x, y + initial_y)
-            
-            if keyboard.is_pressed('esc'):
-                sys.einitial_xt()
-'''
+    

@@ -1,18 +1,16 @@
-from pathlib import Path
 from subprocess import call
 
 from browser import img_search
 from resources import utils
 
-import cmd
+import keyboard
+import argparse
+import cmd2
 import os
 
-class CLI(cmd.Cmd):
+class CLI(cmd2.Cmd):
     prompt = 'AD >> '
-    intro = "Simple CLI" #utils.intro()
-
-    last_keyword = None
-    default_path = Path.home() / "Pictures" / "AutoDrawer"
+    intro = "Simple CLI"
 
     #def do_help(self, line):
 
@@ -30,8 +28,10 @@ class CLI(cmd.Cmd):
         _ = call('clear' if os.name == 'posix' else 'cls')
 
 
-    def do_exit(self, line):
+    def do_quit(self, line):
         return True
+    
+    do_exit = do_quit
     
 
 
