@@ -20,7 +20,7 @@ git clone https://github.com/perpetuooo/Drawer-Bot.git
 ## To-do
 >⚠ Esse programa foi feito com o intuito de ser apenas um pequeno projeto pessoal, é possível que eu não implemente outros updates.
  - [x] Criar uma interface gráfica para o programa;
- - [ ] Melhorar a função do desenhador (muito lento);
+ - [x] Melhorar a função do desenhador (muito lento);
  - [ ] Possibilitar desenhos com cores;
  
  ## Licença
