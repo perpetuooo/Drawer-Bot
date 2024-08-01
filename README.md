@@ -21,6 +21,7 @@ git clone https://github.com/perpetuooo/Drawer-Bot.git
 >⚠ This program was made with the intention of just being a small personal project, it is possible that I will not implement other updates.
  - [x] Create a GUI for the program;
  - [x] Improve the designer function (very slow);
+ - [ ] Improve GUI;
  - [ ] Enable drawings with colors; 
  
  ## License
