@@ -14,7 +14,7 @@ git clone https://github.com/perpetuooo/Drawer-Bot.git
 ```
 ## Como usar
 1. Abra o executável ou rode o arquivo *main.py*;
-2. Selecione o espaço em que o desenho será feito (após selecionar, **NÃO MUDE** a janela de lugar);
+2. Selecione o espaço em que o desenho será feito. Após selecionado, **NÃO MUDE** a janela do espaço de lugar;
 3. Pesquise uma palavra para sua imagem ser pesquisada, baixada e desenhada;
 
 ## To-do
@@ -24,4 +24,4 @@ git clone https://github.com/perpetuooo/Drawer-Bot.git
  - [ ] Possibilitar desenhos com cores;
  
  ## Licença
- [Unlicense](LICENSE.md)
+ [MIT](LICENSE.md)
