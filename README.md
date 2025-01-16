@@ -1,6 +1,6 @@
 # AutoDrawer
 [![pt-br](https://img.shields.io/badge/lang-pt--br-green.svg)](README.PT-BR.md)
-> Python made bot that, upon receiving a keyword, downloads an equivalent image and draws it simulating the user's cursor.
+> A Python bot that upon receiving a keyword, downloads an equivalent image and draws it simulating the user's cursor.
 
 ## Requirements
 Some libraries are necessary if you want to run the source code instead of downloading the compiled version:
@@ -14,7 +14,7 @@ git clone https://github.com/perpetuooo/Drawer-Bot.git
 ```
 ## Usage
 1. Open the executable or run the *main.py* file;
-2. Select the space in which the drawing will be made (after selecting, **DO NOT** change the window placement);
+2. Select the space in which the drawing will be made. After selecting, **DO NOT** change the window placement;
 3. Search a word for your image to be searched, downloaded and drawn;
 
 ## To-do
@@ -25,4 +25,4 @@ git clone https://github.com/perpetuooo/Drawer-Bot.git
  - [ ] Enable drawings with colors; 
  
  ## License
- [Unlicense](LICENSE.md)
+ [MIT](LICENSE.md)
